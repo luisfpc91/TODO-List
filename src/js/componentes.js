@@ -1,4 +1,4 @@
-import { Todo } from "./classes";
+import { Todo, TodoList } from "./classes";
 import { todoList } from '../index.js'; 
 
 //Referencias en HTML
@@ -7,6 +7,7 @@ const inputNewTodo         = document.querySelector('.new-todo');
 const btnBorrarCompletados = document.querySelector('.clear-completed');
 const ulFiltros            = document.querySelector('.filters'); 
 const filtros              = document.querySelectorAll('.filtro');
+const spanPendientes      = document.querySelector('.todo-count');
 
 export const crearTodoHtml = (todo) => {
     const htmlTodo = `
@@ -36,6 +37,11 @@ export const crearTodoHtml = (todo) => {
     return div.firstElementChild;
 }
 
+export const contadorPendientes = (count) => {
+    const numeroPendientes = spanPendientes.firstElementChild;
+    numeroPendientes.innerHTML = count;
+}
+
 //Eventos
 inputNewTodo.addEventListener('keyup', (event) => {
     /**
@@ -55,9 +61,12 @@ inputNewTodo.addEventListener('keyup', (event) => {
         crearTodoHtml(nuevoTodo);
         inputNewTodo.value = '';
         // console.log(todoList);
+
+        contadorPendientes(todoList.contadorPendientes());
     }
 });
 
+//Evento lista
 divTodoList.addEventListener('click', (event) => {
     //Se trae el nombre del elemento al que se le hace click
     const nombreElemento = event.target.localName;
@@ -66,18 +75,22 @@ divTodoList.addEventListener('click', (event) => {
     //Se obtiene el id del li
     const todoId = todoLi.getAttribute('data-id');
     
-    //Se valida si se hizo click en el check
+    //Se valida si se hizo click en el check del TODO
     if(nombreElemento.includes('input')) { 
         todoList.marcarTodo(todoId);
         todoLi.classList.toggle('completed');
+        contadorPendientes(todoList.contadorPendientes());
     
+    //Evento eliminar un TODO
     } else if (nombreElemento.includes('button')) {
         todoList.eliminarTodo(todoId);
         divTodoList.removeChild(todoLi);
+        contadorPendientes(todoList.contadorPendientes());
     }
     // console.log(todoList);
 });
 
+//Eventos borrar completados
 btnBorrarCompletados.addEventListener('click', () => {
     if (todoList.todos.length > 0) {
        todoList.eliminarCompletados();
@@ -89,9 +102,11 @@ btnBorrarCompletados.addEventListener('click', () => {
                 divTodoList.removeChild(todo);
             }
         };
+        contadorPendientes(todoList.contadorPendientes());
     }
 });
 
+//Eventos Filtros
 ulFiltros.addEventListener('click', (event) => {
     //Se obtiene el texto del filtro actul.
     const filtroNombre = event.target.text;

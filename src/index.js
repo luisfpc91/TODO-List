@@ -1,6 +1,6 @@
 import './styles.css';
 import {Todo, TodoList} from './js/classes/index.js';
-import {crearTodoHtml} from './js/componentes.js';
+import {crearTodoHtml, contadorPendientes} from './js/componentes.js';
 
 export const todoList = new TodoList();
 // const tarea    = new Todo('Aprender JS');
@@ -16,7 +16,7 @@ export const todoList = new TodoList();
  * elemento. Si fueran 2 elementos ya no funcionaria.
  */
 todoList.todos.forEach(todo => crearTodoHtml(todo));
-
+contadorPendientes(todoList.contadorPendientes());
 
 /**
  * Local Storage: Almacena información en el obejto storage de forma 

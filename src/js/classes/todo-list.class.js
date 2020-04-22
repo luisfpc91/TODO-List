@@ -42,7 +42,11 @@ export class TodoList {
                     : [];  
 
         this.todos = this.todos.map(Todo.fromJson);
-
         console.log(this.todos);
+    }
+
+    contadorPendientes() {
+        const count = this.todos.filter(todo => !todo.completado);
+        return count.length;
     }
 }
